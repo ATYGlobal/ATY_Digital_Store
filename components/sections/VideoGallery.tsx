@@ -48,7 +48,7 @@ function VideoCard({ video }: { video: Video }) {
         </h3>
         <div className="flex items-center gap-3 text-xs text-slate-400">
           <span className="flex items-center gap-1"><Eye size={11} />{video.views} views</span>
-          <span>{new Date(video.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+          <span>{video.publishedAt ? new Date(video.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : 'Recent'}</span>
         </div>
       </div>
     </a>
