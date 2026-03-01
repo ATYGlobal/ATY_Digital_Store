@@ -65,7 +65,6 @@ const config: Config = {
   },
   plugins: [
     require("@tailwindcss/typography"),
-    require("@tailwindcss/line-clamp"), // Built-in from Tailwind 3.3+ but kept for < 3.3
   ],
 };
 
