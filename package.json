@@ -2,7 +2,7 @@
   "name": "atydigitalstore",
   "version": "1.0.0",
   "private": true,
-  "description": "ATY Digital Store — Curated tech reviews and affiliate picks",
+  "description": "ATY Digital Store \u2014 Curated tech reviews and affiliate picks",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

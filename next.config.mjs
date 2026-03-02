@@ -1,10 +1,10 @@
 // next.config.mjs
-// Plain JavaScript — avoids TypeScript-only import type syntax (no RTF issues).
-// Compatible with Next.js 14.x App Router.
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // Next.js 14 auto-detects src/ — no extra config needed.
+  // @/* alias is set in tsconfig.json paths: "./src/*"
 
   images: {
     remotePatterns: [
@@ -19,9 +19,9 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: [
-          { key: "X-Content-Type-Options",  value: "nosniff" },
-          { key: "X-Frame-Options",         value: "DENY" },
-          { key: "X-XSS-Protection",        value: "1; mode=block" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options",        value: "DENY" },
+          { key: "X-XSS-Protection",       value: "1; mode=block" },
           { key: "Referrer-Policy",         value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy",      value: "camera=(), microphone=(), geolocation=()" },
         ],

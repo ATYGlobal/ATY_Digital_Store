@@ -1,85 +1,75 @@
 # ATY Digital Store
 
-Independent tech reviews and curated affiliate picks. Built with **Next.js 14 App Router**, **TypeScript**, and **Tailwind CSS**.
+Independent tech reviews and curated affiliate picks.  
+Built with **Next.js 14 App Router · TypeScript · Tailwind CSS**.
 
-## Quick Start
+## Repository Layout
+
+```
+atydigitalstore/         ← repo root (push contents here, NOT the folder itself)
+├── src/
+│   ├── app/             ← Next.js App Router entry point
+│   │   ├── page.tsx     ← homepage  /
+│   │   ├── layout.tsx   ← root layout (Navbar + Footer)
+│   │   ├── globals.css
+│   │   ├── about/page.tsx
+│   │   ├── blog/[slug]/page.tsx
+│   │   ├── contact/page.tsx
+│   │   ├── privacy/page.tsx
+│   │   ├── terms/page.tsx
+│   │   └── trending/page.tsx
+│   ├── components/
+│   │   ├── blog/        ← AuthorProfile, Sidebar, NewsletterBox
+│   │   ├── navigation/  ← Navbar, Footer
+│   │   ├── sections/    ← Hero, FeaturedProducts, TrendingClient, ...
+│   │   └── ui/          ← ProductCard, AffiliateButton, ComparisonTable
+│   └── lib/
+│       ├── mockData.ts  ← all types + mock data
+│       └── csvProcessor.ts  ← server-only CSV parser
+├── data/
+│   └── Affiliate.csv   ← 200 affiliate records (stays at root for fs access)
+├── public/
+│   ├── robots.txt
+│   └── sitemap.xml
+├── next.config.mjs      ← plain JS config
+├── tailwind.config.ts   ← content paths point to src/
+├── tsconfig.json        ← @/* alias → ./src/*
+├── postcss.config.js
+└── package.json
+```
+
+## Local Development
 
 ```bash
 npm install
 npm run dev          # http://localhost:3000
 npm run build        # production build
-npm run type-check   # TypeScript check only
+npm run type-check   # TypeScript only, no emit
 ```
 
-## Project Structure
+## Deploy to Vercel / Netlify
 
-```
-atydigitalstore/
-├── app/                    # App Router pages
-│   ├── layout.tsx          # Root layout (Navbar + Footer)
-│   ├── page.tsx            # Homepage
-│   ├── about/page.tsx      # About Us
-│   ├── blog/[slug]/page.tsx
-│   ├── contact/page.tsx
-│   ├── privacy/page.tsx
-│   ├── terms/page.tsx
-│   └── trending/page.tsx   # Affiliate directory (reads data/Affiliate.csv)
-├── components/
-│   ├── blog/               # AuthorProfile, Sidebar, NewsletterBox
-│   ├── navigation/         # Navbar, Footer
-│   ├── sections/           # HeroSection, FeaturedProducts, BlogPreview,
-│   │                       # CTABanner, VideoGallery, ContactClient,
-│   │                       # TrendingClient (CSV-powered)
-│   └── ui/                 # ProductCard, AffiliateButton, ComparisonTable
-├── data/
-│   └── Affiliate.csv       # 200 affiliate brand records (semicolon-delimited)
-├── lib/
-│   ├── mockData.ts         # All types + mock content data
-│   └── csvProcessor.ts     # Server-only CSV parser for Affiliate.csv
-├── public/
-│   ├── robots.txt
-│   └── sitemap.xml
-├── next.config.mjs         # Next.js config (plain JS)
-├── tailwind.config.ts
-├── tsconfig.json
-└── package.json
-```
-
-## Key Type Fixes Applied
-
-| File | Fix |
-|------|-----|
-| `lib/mockData.ts` | `store: string` (required, not `string \| undefined`) |
-| `components/ui/AffiliateButton.tsx` | Imports `Product` from `@/lib/mockData` |
-| `components/ui/ProductCard.tsx` | Imports `Product` from `@/lib/mockData`, re-exports for compat |
-| `next.config.mjs` | Converted from `.ts` to `.mjs` (no RTF risk) |
-| `app/about/page.tsx` | Plain UTF-8 text, no RTF encoding |
-| `lib/csvProcessor.ts` | Server-only CSV parser; never import in Client Components |
-
-## CSV Data Source
-
-`data/Affiliate.csv` is semicolon-delimited with 5 columns:
-
-| Column | Description |
-|--------|-------------|
-| Brand Name | Company / product name |
-| Product Category | Category string (23 unique values) |
-| Affiliate Program URL | `Join Here` / `Search Google` / `[suspicious link removed]` |
-| Contact Email / Portal | Affiliate contact address |
-| Match Score | Editorial score 6–10 |
-
-The `lib/csvProcessor.ts` parser reads this file at build time and enriches each row with category images, descriptions, and normalised UI group labels.
-
-## Deployment (Vercel)
+**Important:** Push the *contents* of this folder to your GitHub repo root —
+not the `atydigitalstore` folder itself. Vercel must find `package.json`
+at the repo root, otherwise it cannot detect the framework.
 
 ```bash
-# 1. Push to GitHub
+# Inside this folder:
+git init
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git add .
 git commit -m "chore: initial project"
-git push
-
-# 2. Import repo in vercel.com — zero config needed for Next.js
+git push -u origin main
 ```
 
-No environment variables are required for the base build.
-See `.env.example` for optional newsletter / contact form keys.
+Then import the repo in Vercel — zero extra config needed.  
+Next.js 14 auto-detects the `src/app/` directory.
+
+## Key Type Rules
+
+| File | Rule |
+|------|------|
+| `src/lib/mockData.ts` | `store: string` required (not optional) |
+| `src/lib/csvProcessor.ts` | Server Component only — never import in `"use client"` files |
+| `tsconfig.json` | `@/*` resolves to `./src/*` |
+| `tailwind.config.ts` | Scans `./src/**` for class names |
