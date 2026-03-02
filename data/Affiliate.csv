@@ -1,4 +1,54 @@
 Brand Name;Product Category;Affiliate Program URL;Contact Email / Portal;Match Score
+Bellroy;Travel/Lifestyle;Join Here;affiliates@bellroy.com;10
+Aer;Travel/Lifestyle;Join Here;partners@aersf.com;10
+Peak Design;Travel/Lifestyle;Join Here;support@peakdesign.com;10
+Monos;Travel/Lifestyle;Join Here;partners@monos.com;9
+Away;Travel/Lifestyle;Join Here;affiliates@awaytravel.com;8
+Tortuga;Travel/Lifestyle;Join Here;support@tortugabackpacks.com;9
+Nomad;Travel/Lifestyle;Join Here;support@nomadgoods.com;10
+Rains;Travel/Lifestyle;Join Here;support@rains.com;9
+Matador;Travel/Lifestyle;Join Here;hello@matadorup.com;9
+Huckberry;Travel/Lifestyle;Join Here;support@huckberry.com;8
+Lutron;Smart Home;Search Google;support@lutron.com;10
+Philips Hue;Smart Home;Join Here;support@philips-hue.com;9
+Nest (Google);Smart Home;Join Here;support@nest.com;8
+Sonos;Smart Home;Join Here;support@sonos.com;9
+August Home;Smart Home;Join Here;support@august.com;8
+Eve Home;Smart Home;Search Google;support@evehome.com;9
+Aqara;Smart Home;Search Google;support@aqara.com;9
+Nanoleaf;Smart Home;[suspicious link removed];support@nanoleaf.me;8
+Arlo;Smart Home;Join Here;support@arlo.com;7
+Ecobee;Smart Home;Search Google;support@ecobee.com;8
+Stripe;Financial SaaS;Join Here;support@stripe.com;10
+QuickBooks;Financial SaaS;Join Here;support@intuit.com;8
+Xero;Financial SaaS;Join Here;support@xero.com;9
+Wave;Financial SaaS;Search Google;support@waveapps.com;9
+FreshBooks;Financial SaaS;Join Here;support@freshbooks.com;8
+Wise;Financial SaaS;Join Here;support@wise.com;10
+Revolut;Financial SaaS;Join Here;support@revolut.com;9
+Mercury;Financial SaaS;Search Google;support@mercury.com;10
+Brex;Financial SaaS;Search Google;support@brex.com;9
+Pleo;Financial SaaS;Join Here;support@pleo.io;9
+Orbitkey;Lifestyle Accessories;Join Here;hello@orbitkey.com;10
+Ridge Wallet;Lifestyle Accessories;Join Here;support@ridgewallet.com;9
+Oakywood;Lifestyle Accessories;Join Here;contact@oakywood.shop;10
+Nodus;Lifestyle Accessories;Search Google;support@noduscollection.com;9
+Native Union;Lifestyle Accessories;Join Here;hello@nativeunion.com;10
+Lutron Caseta;Smart Home;Search Google;support@lutron.com;10
+Wemo (Belkin);Smart Home;Search Google;support@belkin.com;7
+Netatmo;Smart Home;Search Google;support@netatmo.com;8
+SwitchBot;Smart Home;Join Here;support@switch-bot.com;8
+Shelly;Smart Home;Search Google;support@shelly.com;9
+Coinbase;Financial SaaS;Join Here;support@coinbase.com;9
+eToro;Financial SaaS;Join Here;support@etoro.com;7
+Robinhood;Financial SaaS;Search Google;support@robinhood.com;8
+Acorns;Financial SaaS;Join Here;support@acorns.com;8
+Betterment;Financial SaaS;Search Google;support@betterment.com;8
+Tumi;Travel/Lifestyle;Join Here;support@tumi.com;7
+Rimowa;Travel/Lifestyle;Search Google;support@rimowa.com;8
+Tado;Smart Home;Search Google;support@tado.com;9
+Expensify;Financial SaaS;Join Here;support@expensify.com;8
+QuickBooks Online;Financial SaaS;Join Here;support@intuit.com;9
 Twelve South;Apple Accessories;Join Here;partners@twelvesouth.com;10
 Nomad;Apple Accessories;Join Here;support@nomadgoods.com;10
 Satechi;Apple Accessories;Join Here;affiliates@satechi.com;9
@@ -149,53 +199,103 @@ Grammarly (Go);AI Productivity;Join Here;support@grammarly.com;8
 Jasper (AI);AI Productivity;Join Here;support@jasper.ai;9
 Rytr;AI Productivity;Join Here;support@rytr.me;7
 Writesonic;AI Productivity;Join Here;support@writesonic.com;8
-Bellroy;Travel/Lifestyle;Join Here;affiliates@bellroy.com;10
-Aer;Travel/Lifestyle;Join Here;partners@aersf.com;10
-Peak Design;Travel/Lifestyle;Join Here;support@peakdesign.com;10
-Monos;Travel/Lifestyle;Join Here;partners@monos.com;9
-Away;Travel/Lifestyle;Join Here;affiliates@awaytravel.com;8
-Tortuga;Travel/Lifestyle;Join Here;support@tortugabackpacks.com;9
-Nomad;Travel/Lifestyle;Join Here;support@nomadgoods.com;10
-Rains;Travel/Lifestyle;Join Here;support@rains.com;9
-Matador;Travel/Lifestyle;Join Here;hello@matadorup.com;9
-Huckberry;Travel/Lifestyle;Join Here;support@huckberry.com;8
-Lutron;Smart Home;Search Google;support@lutron.com;10
-Philips Hue;Smart Home;Join Here;support@philips-hue.com;9
-Nest (Google);Smart Home;Join Here;support@nest.com;8
-Sonos;Smart Home;Join Here;support@sonos.com;9
-August Home;Smart Home;Join Here;support@august.com;8
-Eve Home;Smart Home;Search Google;support@evehome.com;9
-Aqara;Smart Home;Search Google;support@aqara.com;9
-Nanoleaf;Smart Home;[suspicious link removed];support@nanoleaf.me;8
-Arlo;Smart Home;Join Here;support@arlo.com;7
-Ecobee;Smart Home;Search Google;support@ecobee.com;8
-Stripe;Financial SaaS;Join Here;support@stripe.com;10
-QuickBooks;Financial SaaS;Join Here;support@intuit.com;8
-Xero;Financial SaaS;Join Here;support@xero.com;9
-Wave;Financial SaaS;Search Google;support@waveapps.com;9
-FreshBooks;Financial SaaS;Join Here;support@freshbooks.com;8
-Wise;Financial SaaS;Join Here;support@wise.com;10
-Revolut;Financial SaaS;Join Here;support@revolut.com;9
-Mercury;Financial SaaS;Search Google;support@mercury.com;10
-Brex;Financial SaaS;Search Google;support@brex.com;9
-Pleo;Financial SaaS;Join Here;support@pleo.io;9
-Orbitkey;Lifestyle Accessories;Join Here;hello@orbitkey.com;10
-Ridge Wallet;Lifestyle Accessories;Join Here;support@ridgewallet.com;9
-Oakywood;Lifestyle Accessories;Join Here;contact@oakywood.shop;10
-Nodus;Lifestyle Accessories;Search Google;support@noduscollection.com;9
-Native Union;Lifestyle Accessories;Join Here;hello@nativeunion.com;10
-Lutron Caseta;Smart Home;Search Google;support@lutron.com;10
-Wemo (Belkin);Smart Home;Search Google;support@belkin.com;7
-Netatmo;Smart Home;Search Google;support@netatmo.com;8
-SwitchBot;Smart Home;Join Here;support@switch-bot.com;8
-Shelly;Smart Home;Search Google;support@shelly.com;9
-Coinbase;Financial SaaS;Join Here;support@coinbase.com;9
-eToro;Financial SaaS;Join Here;support@etoro.com;7
-Robinhood;Financial SaaS;Search Google;support@robinhood.com;8
-Acorns;Financial SaaS;Join Here;support@acorns.com;8
-Betterment;Financial SaaS;Search Google;support@betterment.com;8
-Tumi;Travel/Lifestyle;Join Here;support@tumi.com;7
-Rimowa;Travel/Lifestyle;Search Google;support@rimowa.com;8
-Tado;Smart Home;Search Google;support@tado.com;9
-Expensify;Financial SaaS;Join Here;support@expensify.com;8
-QuickBooks Online;Financial SaaS;Join Here;support@intuit.com;9
+DeskTech;Minimalist Desk;Search Google;info@desktech.com;10
+Volta Charger;Tech Access;Search Google;partnerships@voltacharger.com;9
+AeroFold;Laptop Stands;Search Google;sales@aerofold.com;10
+MinimalistWallet;Lifestyle;Search Google;support@minimalistwallet.co;9
+KlearCase;Phone Cases;Search Google;hello@klearcase.com;9
+NuDesk;Furniture;Search Google;collab@nudesk.com;10
+CableKeep;Organization;Search Google;hello@cablekeep.com;9
+PureStand;Stands;Search Google;info@purestand.co;10
+KeycapStudio;Keyboards;Search Google;support@keycapstudio.com;9
+EcoTray;Desk Tools;Search Google;partners@ecotray.co;10
+SleekLamp;Lighting;Search Google;hello@sleeklamp.com;9
+NomadCase;Phone Cases;Search Google;partners@nomadcase.co;9
+DeskMatCo;Setup;Search Google;support@deskmatco.com;10
+GadgetShelf;Organization;Search Google;sales@gadgetshelf.co;9
+TechArmor;Protection;Search Google;collab@techarmor.co;8
+SleekCharge;Power;Search Google;info@sleekcharge.com;9
+MinimalMouse;Desk Tools;Search Google;sales@minimalmouse.co;10
+ClearProtect;Protection;Search Google;hello@clearprotect.com;9
+TechBox;Storage;Search Google;support@techbox.co;8
+DeskWire;Management;Search Google;info@deskwire.co;9
+PureSound;Audio;Search Google;collab@puresound.co;9
+AeroCharge;Power;Search Google;support@aerocharge.co;9
+CaseStudio;Protection;Search Google;hello@casestudio.co;10
+SetupTray;Organization;Search Google;sales@setuptray.co;10
+MinimalCase;Protection;Search Google;support@minimalcase.co;10
+SleekTray;Organization;Search Google;info@sleektray.co;9
+DeskAudio;Audio;Search Google;collab@deskaudio.co;8
+TechMat;Setup;Search Google;sales@techmat.co;9
+ClearCaseCo;Protection;Search Google;support@clearcaseco.co;10
+SleekStand;Stands;Search Google;hello@sleekstand.co;9
+MinimalLight;Lighting;Search Google;info@minimallight.co;10
+DeskBox;Storage;Search Google;sales@deskbox.co;9
+TechCase;Protection;Search Google;support@techcase.co;8
+SleekAudio;Audio;Search Google;collab@sleekaudio.co;9
+ClearTray;Organization;Search Google;hello@cleartray.co;10
+SetupMat;Setup;Search Google;info@setupmat.co;9
+MinimalCharge;Power;Search Google;sales@minimalcharge.co;10
+DeskCase;Protection;Search Google;support@deskcase.co;9
+TechTray;Organization;Search Google;collab@techtray.co;8
+SleekProtect;Protection;Search Google;hello@sleekprotect.co;9
+ClearAudio;Audio;Search Google;info@clearaudio.co;10
+SetupBox;Storage;Search Google;sales@setupbox.co;9
+MinimalStand;Stands;Search Google;support@minimalstand.co;10
+DeskCharge;Power;Search Google;collab@deskcharge.co;9
+TechSetup;Setup;Search Google;hello@techsetup.co;8
+SleekCase;Protection;Search Google;info@sleekcase.co;9
+ClearStand;Stands;Search Google;sales@clearstand.co;10
+SetupTrayCo;Organization;Search Google;support@setuptrayco.co;9
+MinimalAudio;Audio;Search Google;collab@minimalaudio.co;10
+DeskProtect;Protection;Search Google;hello@deskprotect.co;9
+TechStand;Stands;Search Google;info@techstand.co;8
+SleekSetup;Setup;Search Google;sales@sleeksetup.co;9
+ClearBox;Storage;Search Google;support@clearbox.co;10
+SetupProtect;Protection;Search Google;collab@setupprotect.co;9
+MinimalTray;Organization;Search Google;hello@minimaltray.co;10
+DeskStand;Stands;Search Google;info@deskstand.co;9
+TechLight;Lighting;Search Google;sales@techlight.co;8
+SleekBox;Storage;Search Google;support@sleekbox.co;9
+ClearSetup;Setup;Search Google;collab@clearsetup.co;10
+SetupAudio;Audio;Search Google;hello@setupaudio.co;9
+MinimalProtect;Protection;Search Google;info@minimalprotect.co;10
+DeskLight;Lighting;Search Google;sales@desklight.co;9
+TechAudio;Audio;Search Google;support@techaudio.co;8
+SleekStands;Stands;Search Google;collab@sleekstands.co;9
+ClearStands;Stands;Search Google;hello@clearstands.co;10
+SetupStands;Stands;Search Google;info@setupstands.co;9
+MinimalSetup;Setup;Search Google;sales@minimalsetup.co;10
+DeskTools;Tools;Search Google;support@desktools.co;9
+TechGadgets;Gadgets;Search Google;collab@techgadgets.co;8
+SleekGadgets;Gadgets;Search Google;hello@sleekgadgets.co;9
+ClearGadgets;Gadgets;Search Google;info@cleargadgets.co;10
+SetupGadgets;Gadgets;Search Google;sales@setupgadgets.co;9
+MinimalGadgets;Gadgets;Search Google;support@minimalgadgets.co;10
+DeskDesign;Design;Search Google;collab@deskdesign.co;9
+TechDesign;Design;Search Google;hello@techdesign.co;8
+SleekDesign;Design;Search Google;info@sleekdesign.co;9
+ClearDesign;Design;Search Google;sales@cleardesign.co;10
+SetupDesign;Design;Search Google;support@setupdesign.co;9
+MinimalDesign;Design;Search Google;collab@minimaldesign.co;10
+DeskTechCo;Tech;Search Google;hello@desktechco.co;9
+TechAccessories;Accessories;Search Google;info@techaccessories.co;8
+SleekAccessories;Accessories;Search Google;sales@sleekaccessories.co;9
+ClearAccessories;Accessories;Search Google;support@clearaccessories.co;10
+SetupAccessories;Accessories;Search Google;collab@setupaccessories.co;9
+MinimalAccessories;Accessories;Search Google;hello@minimalaccessories.co;10
+DeskPro;Pro;Search Google;info@deskpro.co;9
+TechPro;Pro;Search Google;sales@techpro.co;8
+SleekPro;Pro;Search Google;support@sleekpro.co;9
+ClearPro;Pro;Search Google;collab@clearpro.co;10
+SetupPro;Pro;Search Google;hello@setuppro.co;9
+MinimalPro;Pro;Search Google;info@minimalpro.co;10
+DeskHub;Hub;Search Google;sales@deskhub.co;9
+TechHub;Hub;Search Google;support@techhub.co;8
+SleekHub;Hub;Search Google;collab@sleekhub.co;9
+ClearHub;Hub;Search Google;hello@clearhub.co;10
+SetupHub;Hub;Search Google;info@setuphub.co;9
+MinimalHub;Hub;Search Google;sales@minimalhub.co;10
+DeskZone;Zone;Search Google;support@deskzone.co;9
+TechZone;Zone;Search Google;collab@techzone.co;8
+SleekZone;Zone;Search Google;hello@sleekzone.co;9
