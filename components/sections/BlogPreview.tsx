@@ -22,20 +22,6 @@ function PostCard({ post }: { post: BlogPost }) {
         />
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-5">
-        {/* Category + read time */}
-        <div className="flex items-center gap-3 mb-3">
-          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
-            <Tag size={10} />
-            {(post as any).category}
-          </span>
-          <span className="flex items-center gap-1 text-slate-400 text-xs">
-            <Clock size={11} />
-            {post.readTime} min read
-          </span>
-        </div>
-
         {/* Title */}
         <h3 className="font-black text-slate-900 text-base leading-snug mb-2 group-hover:text-indigo-700 transition-colors line-clamp-2">
           {post.title}
