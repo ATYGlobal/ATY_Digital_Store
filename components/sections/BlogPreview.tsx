@@ -1,6 +1,6 @@
-// components/sections/BlogPreview.tsx
+// src/components/sections/BlogPreview.tsx
 import Link from "next/link";
-import { ArrowRight, Clock, Tag } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import type { BlogPost } from "@/lib/mockData";
 
 interface Props {
@@ -22,9 +22,16 @@ function PostCard({ post }: { post: BlogPost }) {
         />
       </div>
 
-      {/* --- ESTA ES LA LÍNEA QUE FALTABA --- */}
+      {/* Content */}
       <div className="flex flex-col flex-1 p-5">
-        
+        {/* Time - Eliminamos la categoría para evitar el error de tipos */}
+        <div className="flex items-center gap-3 mb-3">
+          <span className="flex items-center gap-1 text-slate-400 text-xs">
+            <Clock size={11} />
+            {post.readTime || "5 min read"}
+          </span>
+        </div>
+
         {/* Title */}
         <h3 className="font-black text-slate-900 text-base leading-snug mb-2 group-hover:text-indigo-700 transition-colors line-clamp-2">
           {post.title}
@@ -53,7 +60,7 @@ function PostCard({ post }: { post: BlogPost }) {
             })}
           </time>
         </div>
-      </div> {/* Cierre del contenedor de texto */}
+      </div>
     </Link>
   );
 }
@@ -81,9 +88,13 @@ export default function BlogPreview({ posts }: Props) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {posts.slice(0, 3).map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
+          {posts && posts.length > 0 ? (
+            posts.slice(0, 3).map((post) => (
+              <PostCard key={post.slug} post={post} />
+            ))
+          ) : (
+            <p className="text-slate-400 text-sm">No articles found.</p>
+          )}
         </div>
       </div>
     </section>
