@@ -1,6 +1,5 @@
-// components/sections/BlogPreview.tsx
 import Link from "next/link";
-import { ArrowRight, Clock, Tag } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import type { BlogPost } from "@/lib/mockData";
 
 interface Props {
@@ -13,7 +12,7 @@ function PostCard({ post }: { post: BlogPost }) {
       href={`/blog/${post.slug}`}
       className="group flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-card-hover transition-all hover:-translate-y-0.5"
     >
-      {/* Cover image */}
+      {/* Imagen */}
       <div className="aspect-[16/9] bg-slate-100 overflow-hidden">
         <img
           src={post.coverImage}
@@ -22,31 +21,23 @@ function PostCard({ post }: { post: BlogPost }) {
         />
       </div>
 
-      {/* Content */}
+      {/* Contenido */}
       <div className="flex flex-col flex-1 p-5">
-        {/* Category + read time */}
         <div className="flex items-center gap-3 mb-3">
-          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
-            <Tag size={10} />
-            {post.category}
-          </span>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
             <Clock size={11} />
-            {post.readTime} min read
+            {post.readTime || "5"} min read
           </span>
         </div>
 
-        {/* Title */}
         <h3 className="font-black text-slate-900 text-base leading-snug mb-2 group-hover:text-indigo-700 transition-colors line-clamp-2">
           {post.title}
         </h3>
 
-        {/* Excerpt */}
         <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 mb-4 flex-1">
           {post.excerpt}
         </p>
 
-        {/* Author + date */}
         <div className="flex items-center justify-between pt-3 border-t border-slate-100">
           <div className="flex items-center gap-2">
             <img
@@ -56,13 +47,9 @@ function PostCard({ post }: { post: BlogPost }) {
             />
             <span className="text-xs font-semibold text-slate-700">{post.author.name}</span>
           </div>
-          <time className="text-xs text-slate-400" dateTime={post.publishedAt}>
-            {new Date(post.publishedAt).toLocaleDateString("en-US", {
-              month: "short",
-              day:   "numeric",
-              year:  "numeric",
-            })}
-          </time>
+          <span className="text-xs text-slate-400">
+            {new Date(post.publishedAt).toLocaleDateString()}
+          </span>
         </div>
       </div>
     </Link>
@@ -70,24 +57,18 @@ function PostCard({ post }: { post: BlogPost }) {
 }
 
 export default function BlogPreview({ posts }: Props) {
+  if (!posts || posts.length === 0) return null;
+
   return (
-    <section className="bg-slate-50 py-20" aria-labelledby="blog-preview-heading">
+    <section className="bg-slate-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between mb-10">
           <div>
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-2">
-              Latest Research
-            </p>
-            <h2 id="blog-preview-heading" className="text-3xl font-black text-slate-900 tracking-tight">
-              In-Depth Reviews
-            </h2>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-2">Latest Research</p>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">In-Depth Reviews</h2>
           </div>
-          <Link
-            href="/blog"
-            className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors group"
-          >
-            All Articles
-            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+          <Link href="/blog" className="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900">
+            All Articles <ArrowRight size={14} />
           </Link>
         </div>
 
