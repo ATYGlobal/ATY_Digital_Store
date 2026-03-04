@@ -22,6 +22,9 @@ function PostCard({ post }: { post: BlogPost }) {
         />
       </div>
 
+      {/* --- ESTA ES LA LÍNEA QUE FALTABA --- */}
+      <div className="flex flex-col flex-1 p-5">
+        
         {/* Title */}
         <h3 className="font-black text-slate-900 text-base leading-snug mb-2 group-hover:text-indigo-700 transition-colors line-clamp-2">
           {post.title}
@@ -45,12 +48,12 @@ function PostCard({ post }: { post: BlogPost }) {
           <time className="text-xs text-slate-400" dateTime={post.publishedAt}>
             {new Date(post.publishedAt).toLocaleDateString("en-US", {
               month: "short",
-              day:   "numeric",
-              year:  "numeric",
+              day: "numeric",
+              year: "numeric",
             })}
           </time>
         </div>
-      </div>
+      </div> {/* Cierre del contenedor de texto */}
     </Link>
   );
 }
