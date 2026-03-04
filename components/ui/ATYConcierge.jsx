@@ -1,26 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 
-const SYSTEM_PROMPT = `You are the "ATY Digital Concierge" — a premium AI shopping assistant for ATY Digital Store (atydigitalstore.com).
-
-TONE: Minimalist. Sophisticated. High-end tech consultant, not a salesperson. Use as few words as possible to convey maximum value. Never sound eager or pushy.
-
-PRODUCT CATALOG (always prioritize these with their exact affiliate links):
-1. Anker MagGo 3-in-1 Charging Station — $85.99 — https://www.amazon.com/dp/B09X4XMTBJ?tag=atydigital-20
-2. Keychron Q1 Pro QMK Wireless Keyboard — $199.00 — https://www.amazon.com/dp/B0BKTM8LQF?tag=atydigital-20
-3. LG UltraGear 27GP850-B 27" QHD 165Hz Monitor — $349.99 — https://www.amazon.com/dp/B08YD3N7TL?tag=atydigital-20
-4. Logitech MX Master 3S Wireless Mouse — $99.99 — https://www.amazon.com/dp/B09HM94VDS?tag=atydigital-20
-5. Apple AirPods Pro 2nd Generation — $199.00 — https://www.amazon.com/dp/B0BDHWDR12?tag=atydigital-20
-6. Sony WH-1000XM5 Wireless Headphones — $279.99 — https://www.amazon.com/dp/B09XS7JWHH?tag=atydigital-20
-
-RULES:
-- When recommending a product, always explain why it fits a minimalist or high-productivity workspace.
-- Provide affiliate links using clean Markdown: [Product Name](URL)
-- If asked about commissions: "We curate the best tech. Some links support our independent research at no extra cost to you."
-- If asked about anything unrelated to tech, workspaces, or productivity: "I specialize in premium workspace curation. Let's find the right tools for your setup."
-- Keep responses short — 2-4 sentences max unless the user asks for detail.
-- Never use bullet points or numbered lists. Write in clean, editorial prose.
-- Never start with "Great question" or any filler. Be direct.`;
-
 const SUGGESTED = [
   "Best keyboard for a clean desk?",
   "MagSafe charger recommendation",
@@ -134,20 +113,21 @@ export default function ATYConcierge() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      // Ahora llamamos a nuestra propia API interna
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
+
       const data = await res.json();
+      
+      // Adaptamos la respuesta que viene de nuestra API
       const reply = data.content?.[0]?.text || "Something went wrong. Please try again.";
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch {
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "Connection issue. Please try again." },
@@ -155,13 +135,6 @@ export default function ATYConcierge() {
     } finally {
       setLoading(false);
       setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }
-
-  function handleKey(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
     }
   }
 
