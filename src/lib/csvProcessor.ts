@@ -1,79 +1,95 @@
 // lib/csvProcessor.ts
 // ─────────────────────────────────────────────────────────────────────────────
 // SERVER-ONLY — uses Node.js `fs`. Never import this in a Client Component.
-// Reads data/Affiliate.csv and returns a typed, sanitised AffiliatePartner[].
 //
-// CSV columns (semicolon-delimited):
-//   Brand Name | Product Category | Affiliate Program URL |
-//   Contact Email / Portal | Match Score
+// Exports:
+//   getAffiliatePartners()  → reads data/Affiliate.csv  (brand directory)
+//   getProducts()           → reads data/products.csv   (individual products)
+//   getCategories()         → filter chips for AffiliatePartner[]
+//   getProductCategories()  → filter chips for Product[]
 // ─────────────────────────────────────────────────────────────────────────────
 
 import fs   from "fs";
 import path from "path";
 
-// ════════════════════════════════════════════════════════════════════════════
-// TYPES
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// TYPES — Affiliate brands
+// ═══════════════════════════════════════════════════════════════════
 
-/** How to reach the affiliate programme. */
 export type JoinType = "join" | "search" | "unavailable";
 
-/** One row from Affiliate.csv, fully typed and enriched. */
 export interface AffiliatePartner {
-  /** Stable slug derived from brand name — safe for React keys / URLs. */
-  id: string;
-  /** Original brand name from CSV, e.g. "Twelve South" */
-  brandName: string;
-  /** Product category from CSV, e.g. "Apple Accessories" */
-  category: string;
-  /** Normalised category group for UI filter chips */
+  id:            string;
+  brandName:     string;
+  category:      string;
   categoryGroup: string;
-  /** How to reach the affiliate programme */
-  joinType: JoinType;
-  /** Best-effort affiliate programme URL (Google search as fallback) */
-  affiliateUrl: string;
-  /** Contact e-mail from CSV */
-  contactEmail: string;
-  /** Match score 6–10 */
-  matchScore: number;
-  /** Curated Unsplash image for the category */
-  imageUrl: string;
-  /** Short description generated from brand + category */
-  description: string;
+  joinType:      JoinType;
+  affiliateUrl:  string;
+  contactEmail:  string;
+  matchScore:    number;
+  imageUrl:      string;
+  description:   string;
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// LOOKUP TABLES
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// TYPES — Individual products  (data/products.csv)
+// ═══════════════════════════════════════════════════════════════════
 
-/** Map every CSV category → a single UI filter group label */
+/**
+ * One row from products.csv.
+ * Columns: Product Name | Category | Brand Name | Amazon URL |
+ *          Official Site URL | AliExpress URL | Description | Image Path
+ * "No Disponible" values are normalised to null.
+ */
+export interface Product {
+  /** Stable URL-safe slug derived from the product name. */
+  id:              string;
+  name:            string;
+  category:        string;
+  brand:           string;
+  /** Amazon affiliate URL — null when not available. */
+  amazonUrl:       string | null;
+  /** Brand official product page — null when not available. */
+  officialUrl:     string | null;
+  /** AliExpress listing URL — null when not available. */
+  aliexpressUrl:   string | null;
+  description:     string;
+  /** Resolved image: local path from CSV, or Unsplash fallback. */
+  imagePath:       string;
+  /** True when at least one purchase URL exists. */
+  hasPurchaseLink: boolean;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LOOKUP TABLES — Affiliate brands
+// ═══════════════════════════════════════════════════════════════════
+
 const CATEGORY_GROUP: Record<string, string> = {
-  "Apple Accessories":      "Apple",
-  "Desk Setup":             "Desk Setup",
-  "Software (SaaS)":        "Software",
-  "Developer Tools":        "Dev Tools",
-  "Smart Home":             "Smart Home",
-  "Ergonomic Furniture":    "Ergonomics",
-  "Content Creation":       "Content",
-  "AI Productivity":        "AI",
-  "AI Content":             "AI",
-  "AI Design":              "AI",
-  "Travel/Lifestyle":       "Travel",
-  "Sustainable Goods":      "Sustainable",
-  "Sustainable Accessories":"Sustainable",
-  "Sustainable Tools":      "Sustainable",
-  "Sustainable Bags":       "Sustainable",
-  "Sustainable Carry":      "Sustainable",
-  "Sustainable Tech":       "Sustainable",
-  "Sustainable Marketplace":"Sustainable",
-  "Sustainable Gear":       "Sustainable",
-  "High-Fidelity Audio":    "Audio",
-  "Niche Audio Gear":       "Audio",
-  "Lifestyle Accessories":  "Lifestyle",
-  "Financial SaaS":         "Fintech",
+  "Apple Accessories":       "Apple",
+  "Desk Setup":              "Desk Setup",
+  "Software (SaaS)":         "Software",
+  "Developer Tools":         "Dev Tools",
+  "Smart Home":              "Smart Home",
+  "Ergonomic Furniture":     "Ergonomics",
+  "Content Creation":        "Content",
+  "AI Productivity":         "AI",
+  "AI Content":              "AI",
+  "AI Design":               "AI",
+  "Travel/Lifestyle":        "Travel",
+  "Sustainable Goods":       "Sustainable",
+  "Sustainable Accessories": "Sustainable",
+  "Sustainable Tools":       "Sustainable",
+  "Sustainable Bags":        "Sustainable",
+  "Sustainable Carry":       "Sustainable",
+  "Sustainable Tech":        "Sustainable",
+  "Sustainable Marketplace": "Sustainable",
+  "Sustainable Gear":        "Sustainable",
+  "High-Fidelity Audio":     "Audio",
+  "Niche Audio Gear":        "Audio",
+  "Lifestyle Accessories":   "Lifestyle",
+  "Financial SaaS":          "Fintech",
 };
 
-/** One Unsplash photo per UI filter group */
 const CATEGORY_IMAGE: Record<string, string> = {
   "Apple":      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80",
   "Desk Setup": "https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=600&q=80",
@@ -93,26 +109,59 @@ const CATEGORY_IMAGE: Record<string, string> = {
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80";
 
-/** Short description templates keyed by UI group */
 const DESCRIPTION_TEMPLATE: Record<string, (brand: string) => string> = {
-  "Apple":      (b) => `${b} crafts premium accessories engineered specifically for the Apple ecosystem — MagSafe, precision fit, and lasting build quality.`,
-  "Desk Setup": (b) => `${b} designs workspace products that combine functionality and aesthetics for the modern knowledge worker's desk.`,
-  "Software":   (b) => `${b} delivers SaaS tools that streamline workflows, boost productivity, and integrate deeply with the tools you already use.`,
-  "Dev Tools":  (b) => `${b} provides developer-focused infrastructure and tooling trusted by engineering teams at high-growth startups and Fortune 500s.`,
-  "Smart Home": (b) => `${b} makes connected home devices that are genuinely useful, reliable, and privacy-conscious — smart tech that stays out of your way.`,
-  "Ergonomics": (b) => `${b} builds ergonomic furniture designed around how humans actually work, reducing strain and improving posture over long sessions.`,
-  "Content":    (b) => `${b} equips photographers, videographers, and creators with professional gear built for the field and the studio.`,
-  "AI":         (b) => `${b} harnesses AI to remove friction from knowledge work — writing, research, summarisation, and creative workflows, automated.`,
-  "Travel":     (b) => `${b} builds thoughtfully designed carry gear for people who travel intentionally — lightweight, organised, and built to last.`,
-  "Sustainable":(b) => `${b} is a leader in sustainable goods: eco-conscious materials, ethical supply chains, and products designed to reduce waste.`,
-  "Audio":      (b) => `${b} is a high-fidelity audio brand trusted by audiophiles and professionals who refuse to compromise on sound quality.`,
-  "Lifestyle":  (b) => `${b} creates refined everyday carry accessories — wallets, organisers, and accessories engineered for quiet elegance.`,
-  "Fintech":    (b) => `${b} provides financial infrastructure and SaaS tools that help businesses and individuals manage money with more clarity and control.`,
+  "Apple":      (b) => `${b} crafts premium accessories engineered for the Apple ecosystem.`,
+  "Desk Setup": (b) => `${b} designs workspace products that combine functionality and aesthetics.`,
+  "Software":   (b) => `${b} delivers SaaS tools that streamline workflows and boost productivity.`,
+  "Dev Tools":  (b) => `${b} provides developer-focused tooling trusted by engineering teams worldwide.`,
+  "Smart Home": (b) => `${b} makes connected home devices that are useful, reliable, and privacy-conscious.`,
+  "Ergonomics": (b) => `${b} builds ergonomic furniture designed to reduce strain over long work sessions.`,
+  "Content":    (b) => `${b} equips creators with professional gear built for the field and studio.`,
+  "AI":         (b) => `${b} harnesses AI to remove friction from writing, research, and creative workflows.`,
+  "Travel":     (b) => `${b} builds thoughtfully designed carry gear for intentional travellers.`,
+  "Sustainable":(b) => `${b} leads in sustainable goods: eco-conscious materials and ethical supply chains.`,
+  "Audio":      (b) => `${b} is a high-fidelity audio brand trusted by audiophiles and professionals.`,
+  "Lifestyle":  (b) => `${b} creates refined everyday carry accessories engineered for quiet elegance.`,
+  "Fintech":    (b) => `${b} provides financial SaaS tools that help businesses manage money with clarity.`,
 };
 
-// ════════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// LOOKUP TABLES — Products
+// ═══════════════════════════════════════════════════════════════════
+
+const PRODUCT_CATEGORY_IMAGE: Record<string, string> = {
+  "Keyboards":           "https://images.unsplash.com/photo-1595044426077-d36d9236d54a?w=600&q=80",
+  "Keyboard Accessories":"https://images.unsplash.com/photo-1595044426077-d36d9236d54a?w=600&q=80",
+  "Desk Accessories":    "https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=600&q=80",
+  "Desk Organization":   "https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=600&q=80",
+  "Desk Risers":         "https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=600&q=80",
+  "Home Office":         "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80",
+  "Laptop Accessories":  "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80",
+  "Laptop Bags":         "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=600&q=80",
+  "Laptop Stands":       "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80",
+  "Monitor Arms":        "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&q=80",
+  "Phone Accessories":   "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80",
+  "Phone Cases":         "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80",
+  "Phone Chargers":      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80",
+  "Phone Stands":        "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80",
+  "Chargers":            "https://images.unsplash.com/photo-1588423771073-b8903fead85b?w=600&q=80",
+  "Charging Stations":   "https://images.unsplash.com/photo-1588423771073-b8903fead85b?w=600&q=80",
+  "Docks & Hubs":        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
+  "Audio":               "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+  "Audio Accessories":   "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+  "Lighting":            "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=600&q=80",
+  "Storage":             "https://images.unsplash.com/photo-1531492744076-161ca9bcad58?w=600&q=80",
+  "Wallets":             "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+  "Everyday Carry":      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+  "Travel Accessories":  "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=600&q=80",
+  "Gadgets":             "https://images.unsplash.com/photo-1468436139062-f60a71c5c892?w=600&q=80",
+  "Tools":               "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
+  "Productivity Tools":  "https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?w=600&q=80",
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// SHARED HELPERS
+// ═══════════════════════════════════════════════════════════════════
 
 function slugify(text: string): string {
   return text
@@ -121,26 +170,35 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+/** Returns null for blank / "No Disponible" values. */
+function normaliseUrl(raw: string): string | null {
+  const s = raw.trim();
+  if (!s || s.toLowerCase() === "no disponible") return null;
+  return s;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HELPERS — Affiliate brands
+// ═══════════════════════════════════════════════════════════════════
+
 function parseJoinType(raw: string): JoinType {
   const s = raw.trim().toLowerCase();
-  if (s === "join here")            return "join";
-  if (s === "search google")        return "search";
-  return "unavailable"; // catches "[suspicious link removed]" and unknowns
+  if (s === "join here")     return "join";
+  if (s === "search google") return "search";
+  return "unavailable";
 }
 
 function buildAffiliateUrl(brandName: string): string {
-  // Real URLs are not in the CSV. We generate the best-effort Google search.
   return `https://www.google.com/search?q=${encodeURIComponent(
     brandName + " affiliate program"
   )}`;
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// PARSER
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// PARSER — Affiliate.csv
+// ═══════════════════════════════════════════════════════════════════
 
-/** Parse the raw CSV text into an AffiliatePartner array. */
-function parseCSV(text: string): AffiliatePartner[] {
+function parseAffiliateCSV(text: string): AffiliatePartner[] {
   const lines = text
     .replace(/\r\n/g, "\n")
     .replace(/\r/g, "\n")
@@ -149,14 +207,11 @@ function parseCSV(text: string): AffiliatePartner[] {
 
   if (lines.length < 2) return [];
 
-  // Skip header row (index 0)
-  const dataLines = lines.slice(1);
-
   const partners: AffiliatePartner[] = [];
 
-  for (const line of dataLines) {
+  for (const line of lines.slice(1)) {
     const cols = line.split(";");
-    if (cols.length < 5) continue; // skip malformed rows
+    if (cols.length < 5) continue;
 
     const brandName    = cols[0].trim();
     const category     = cols[1].trim();
@@ -164,10 +219,10 @@ function parseCSV(text: string): AffiliatePartner[] {
     const contactEmail = cols[3].trim();
     const rawScore     = cols[4].trim();
 
-    if (!brandName || !category) continue; // skip empty rows
+    if (!brandName || !category) continue;
 
     const matchScore = parseInt(rawScore, 10);
-    if (isNaN(matchScore)) continue; // skip if score is not a number
+    if (isNaN(matchScore)) continue;
 
     const joinType      = parseJoinType(rawUrl);
     const categoryGroup = CATEGORY_GROUP[category] ?? "Other";
@@ -175,7 +230,7 @@ function parseCSV(text: string): AffiliatePartner[] {
     const descFn        = DESCRIPTION_TEMPLATE[categoryGroup];
     const description   = descFn
       ? descFn(brandName)
-      : `${brandName} is a trusted brand in the ${category} space with a strong affiliate programme.`;
+      : `${brandName} is a trusted brand in the ${category} space.`;
 
     partners.push({
       id: slugify(brandName) || `brand-${partners.length}`,
@@ -194,43 +249,117 @@ function parseCSV(text: string): AffiliatePartner[] {
   return partners;
 }
 
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// PARSER — products.csv
+// Columns (semicolon-delimited, row 0 is header):
+//   0 Product Name | 1 Category | 2 Brand Name | 3 Amazon URL |
+//   4 Official Site URL | 5 AliExpress URL | 6 Description | 7 Image Path
+// ═══════════════════════════════════════════════════════════════════
+
+function parseProductsCSV(text: string): Product[] {
+  const lines = text
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .filter(Boolean);
+
+  if (lines.length < 2) return [];
+
+  const products: Product[] = [];
+
+  for (const line of lines.slice(1)) {
+    const cols = line.split(";");
+    if (cols.length < 8) continue;
+
+    const name        = cols[0].trim();
+    const category    = cols[1].trim();
+    const brand       = cols[2].trim();
+    const amazonUrl   = normaliseUrl(cols[3]);
+    const officialUrl = normaliseUrl(cols[4]);
+    const aliUrl      = normaliseUrl(cols[5]);
+    const description = cols[6].trim();
+    const rawImage    = cols[7].trim();
+
+    if (!name || !category || !brand) continue;
+
+    const hasPurchaseLink = Boolean(amazonUrl ?? officialUrl ?? aliUrl);
+    const imagePath =
+      rawImage && rawImage.toLowerCase() !== "no disponible"
+        ? rawImage
+        : (PRODUCT_CATEGORY_IMAGE[category] ?? FALLBACK_IMAGE);
+
+    products.push({
+      id: slugify(name) || `product-${products.length}`,
+      name,
+      category,
+      brand,
+      amazonUrl,
+      officialUrl,
+      aliexpressUrl: aliUrl,
+      description,
+      imagePath,
+      hasPurchaseLink,
+    });
+  }
+
+  return products;
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // PUBLIC API
-// ════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 
 /**
- * Reads `data/Affiliate.csv` from the project root and returns all partners
- * sorted by matchScore descending, then brandName ascending.
- *
+ * Reads data/Affiliate.csv → sorted by matchScore desc, then brandName asc.
  * Call only from Server Components or Route Handlers.
  */
 export function getAffiliatePartners(): AffiliatePartner[] {
   const csvPath = path.join(process.cwd(), "data", "Affiliate.csv");
-
   let raw: string;
   try {
     raw = fs.readFileSync(csvPath, "utf-8");
   } catch {
-    console.error(
-      `[csvProcessor] Could not read ${csvPath}. ` +
-      `Make sure data/Affiliate.csv exists in your project root.`
-    );
+    console.error(`[csvProcessor] Cannot read ${csvPath}`);
     return [];
   }
-
-  const partners = parseCSV(raw);
-
-  return partners.sort((a, b) => {
+  return parseAffiliateCSV(raw).sort((a, b) => {
     if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
     return a.brandName.localeCompare(b.brandName);
   });
 }
 
 /**
- * Returns the unique categoryGroup values present in the CSV,
- * sorted alphabetically — useful for building filter chips.
+ * Reads data/products.csv → sorted by category asc, then name asc.
+ * Call only from Server Components or Route Handlers.
+ */
+export function getProducts(): Product[] {
+  const csvPath = path.join(process.cwd(), "data", "products.csv");
+  let raw: string;
+  try {
+    raw = fs.readFileSync(csvPath, "utf-8");
+  } catch {
+    console.error(`[csvProcessor] Cannot read ${csvPath}`);
+    return [];
+  }
+  return parseProductsCSV(raw).sort((a, b) => {
+    const catCmp = a.category.localeCompare(b.category);
+    return catCmp !== 0 ? catCmp : a.name.localeCompare(b.name);
+  });
+}
+
+/**
+ * Unique categoryGroup values from AffiliatePartner[] with "All" prepended.
  */
 export function getCategories(partners: AffiliatePartner[]): string[] {
   const set = new Set(partners.map((p) => p.categoryGroup));
+  return ["All", ...Array.from(set).sort()];
+}
+
+/**
+ * Unique category values from Product[] with "All" prepended.
+ * Use this to build filter chips in ProductsClient.
+ */
+export function getProductCategories(products: Product[]): string[] {
+  const set = new Set(products.map((p) => p.category));
   return ["All", ...Array.from(set).sort()];
 }

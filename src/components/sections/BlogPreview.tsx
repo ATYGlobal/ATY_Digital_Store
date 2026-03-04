@@ -28,7 +28,7 @@ function PostCard({ post }: { post: BlogPost }) {
         <div className="flex items-center gap-3 mb-3">
           <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
             <Tag size={10} />
-            category: string;
+            {post.category}
           </span>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
             <Clock size={11} />
