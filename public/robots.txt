@@ -1,0 +1,21 @@
+# robots.txt — atydigitalstore.com
+# Generated: 2026-03-01
+
+User-agent: *
+Allow: /
+
+# Block Next.js internal routes and API endpoints
+Disallow: /api/
+Disallow: /_next/
+Disallow: /404
+Disallow: /500
+
+# Allow specific crawlers full access (optional overrides)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
+Sitemap: https://atydigitalstore.com/sitemap.xml
